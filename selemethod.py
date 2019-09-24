@@ -102,5 +102,6 @@ class Lagouspider:
 			
 			comptype = info.find("div.list_item_bot div.li_b_l").text()
 			comwalre = info.find("div.list_item_bot div.li_b_r").text()
+			print(comwalre)
 l = Lagouspider()
 l.run()
