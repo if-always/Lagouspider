@@ -9,8 +9,18 @@ class Lagouspider(object):
 		
 		self.city = city
 		self.keyword = keyword
-		self.url = f"https://www.lagou.com/jobs/list_{keyword}?px=default&city={city}#filterBox"
+		self.code = self.get_code()
+		self.url = f"https://www.lagou.com/jobs/list_{self.keyword}?px=default&city=" + str("{}#filterBox".format(self.code))
 		
+	def get_code(self):
+		
+		codes = {
+			'苏州':'%E8%8B%8F%E5%B7%9E',
+			'上海':'%E4%B8%8A%E6%B5%B7',
+			'北京':'%E5%8C%97%E4%BA%AC'
+		}
+		return codes.get(self.city)
+
 	def get_response(self):
 		
 		headers ={
@@ -21,13 +31,13 @@ class Lagouspider(object):
 		response = requests.get(url=self.url,headers=headers)
 		return response
 
-	def get_json(self,num):
+	def get_json(self,page,response):
 
-		response = self.get_response()
+		
 		my_headers = {
 						'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                 		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-                		'Referer': f'https://www.lagou.com/jobs/list_{self.keyword}?px=default&city=',
+                		'Referer': f'https://www.lagou.com/jobs/list_{self.keyword}?labelWords=sug&fromSearch=true&suginput={self.keyword}',
                 		'Origin': 'https://www.lagou.com',
                 		'Host': 'www.lagou.com',
                 		'X-Anit-Forge-Code': '0',
@@ -40,53 +50,49 @@ class Lagouspider(object):
                 	'city': self.city
             
 		}
-
+		#print(my_param)
 		my_data = {
 					'kd': self.keyword, 
                 	'first': 'true',
-                	'pn': str(num),
+                	'pn': str(page),
 		}
-
+		#print(my_data)
 		r = requests.utils.dict_from_cookiejar(response.cookies)
 		
-		#print(r)
-		r['X_HTTP_TOKEN'] = r['X_HTTP_TOKEN']
-		r['user_trace_token'] = r['user_trace_token']
-		r['JSESSIONID'] = r['JSESSIONID']
-		r['SEARCH_ID'] = r['SEARCH_ID']
+		
+		# r['X_HTTP_TOKEN'] = r['X_HTTP_TOKEN']
+		# r['user_trace_token'] = r['user_trace_token']
+		# r['JSESSIONID'] = r['JSESSIONID']
+		# r['SEARCH_ID'] = r['SEARCH_ID']
 		#print(r)
 
 
 		cookies = {
 		'_gat': '1',
 		'PRE_UTM': '',
-		'hasDeliver': '0',
+		'hasDeliver': '2',
 		'showExpriedMyPublish': '1',
 		'showExpriedCompanyHome': '1',
 		'showExpriedIndex': '1',
 		'login': 'true',
-		'sajssdk_2015_cross_new_user': '1',
-		'PRE_HOST': 'blog.csdn.net',
-		'TG-TRACK-CODE': 'search_code',
-		'LGRID': '20190324213839-21d2ecda-4e3a-11e9-b493-5254005c3644',
-		'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1553434719',
-		'SEARCH_ID': '6ad9250f920c43d3a6145d14253f4c79',
-		'X_MIDDLE_TOKEN': 'ea516bb77285d71a3f70c60654f86a6a',
-		'Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1553427486,1553429096,1553434584,1553434601',
-		'PRE_LAND': 'https%3A%2F%2Fwww.lagou.com%2Fjobs%2Flist_java%3FlabelWords%3D%26fromSearch%3Dtrue%26suginput%3D%3FlabelWords%3Dhot',
-		'JSESSIONID': 'ABAAABAAADEAAFIA7A0A6CE93C3B7F272ABD8DC5BC6DAA8',
-		'_ga': 'GA1.2.161595218.1553427486',
-		'_gid': 'GA1.2.1268872210.1553427486',
-		'user_trace_token': '20190324193806-4aaf56a0-4e29-11e9-8ac8-525400f775ce',
-		'LGUID': '20190324193806-4aaf59b0-4e29-11e9-8ac8-525400f775ce',
-		'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%22169afb5765410c-00ad34089f8264-3c604504-2073600-169afb576551bf%22%2C%22%24device_id%22%3A%22169afb5765410c-00ad34089f8264-3c604504-2073600-169afb576551bf%22%7D',
-		'LG_LOGIN_USER_ID': '96d26cc9a60fb19d8f1c8ffff5f9068b92c1d8f3c024b59b817b841c0c3a5bff',
+		'TG-TRACK-CODE': 'index_search',
+		'LGRID': '20190925194842-6c3be980-df8a-11e9-a52b-5254005c3644',
+		'Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1569412123',
+		'SEARCH_ID': '71f8a5ed0c9444059ca1c1c3ce024d99',
+		'X_MIDDLE_TOKEN': 'ed61c2cff752f343f9886c12b551bb77',
+		'Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6': '1569326148,1569326748,1569372165,1569408080',
+		'JSESSIONID': 'ABAAABAABEEAAJA47BA0A17FF50B026D37D336F9E5360C0',
+		'_ga': 'GA1.2.818763548.1537266900',
+		'_gid': 'GA1.2.1034959748.1569197306',
+		'user_trace_token': '20180918183502-8034fe66-bb2e-11e8-a1f7-525400f775ce',
+		'LGUID': '20180918183502-8035040e-bb2e-11e8-a1f7-525400f775ce',
+		'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%221665cccef065ba-0601059e1962eb-43480420-1049088-1665cccef07362%22%2C%22%24device_id%22%3A%221665cccef065ba-0601059e1962eb-43480420-1049088-1665cccef07362%22%2C%22props%22%3A%7B%22%24latest_utm_source%22%3A%22m_cf_cpt_baidu_pc%22%2C%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%7D',
 		'PRE_SITE': 'https%3A%2F%2Fblog.csdn.net%2Fqq_37462361%2Farticle%2Fdetails%2F87856659',
-		'LGSID': '20190324213624-d177e32c-4e39-11e9-8af2-525400f775ce',
-		'_putrc': 'C4C6A5FE2C61AA92123F89F2B170EADC',
-		'unick': '%E5%8F%B6%E7%90%86%E4%BD%A9',
-		'gate_login_token': 'd0a8a428cd39437390e15e201294324c466e65461414742cd90eaadddfb52e3f',
-		'index_location_city': '%E5%B9%BF%E5%B7%9E',
+		'LGSID': '20190925184119-0227fc89-df81-11e9-a52b-5254005c3644',
+		'_putrc': '145F731F90C7833B123F89F2B170EADC',
+		'unick': '%E8%96%84%E5%A0%89%E6%9E%97',
+		'gate_login_token': '16e4ccf9950391a253be0a82133e94feb912a209b818b01f1491cd0f36d492ac',
+		'index_location_city': '%E5%85%A8%E5%9B%BD',
 		}
 		cookies.update(r)
 
@@ -101,10 +107,58 @@ class Lagouspider(object):
 		
 		return result
 
-	def get_pages(self):
-		totalcounts = self.get_json(1)['totalCount']
+	def get_pages(self,response):
+		totalcounts = self.get_json(1,response)['totalCount']
 		#print(totalcounts)
-		res = math.ceil(int(totalcounts)/15)
-		print(res)
-a = Lagouspider("全国", "Java")
-a.get_pages()
+		pages = math.ceil(int(totalcounts)/15)
+		print(f"******职位总个数为{totalcounts}个 , 共{pages}页******")
+		return pages
+
+
+
+	def get_infos(self,pages,response):
+		for i in range(1,pages+1):
+			print(f"******正在获取第{i}页数据******")
+			result = self.get_json(i,response)
+
+			infos = result.get('result')
+			for info in infos:
+				city = info.get('city')
+				salary = info.get('salary')
+				latitude = info.get('latitude')
+				district = info.get('district')
+				workYear = info.get('workYear')
+				longitude = info.get('longitude')
+				jobNature = info.get('jobNature')
+				firstType = info.get('firstType')
+				education = info.get('education')
+				companyId = info.get('companyId')
+				createTime = info.get('createTime')
+				companySize = info.get('companySize')
+				positionId = info.get('positionId')
+				skillLables = info.get('skillLables')
+				industryField = info.get('industryField')
+				positionName = info.get('positionName')
+				companyFullName = info.get('companyFullName')
+				companyLabelList = info.get('companyLabelList')
+				positionAdvantage = info.get('positionAdvantage')
+
+				print(positionName)
+			time.sleep(2)
+
+
+	def main(self):
+
+		response = self.get_response()
+
+		pages = self.get_pages(response)
+		#print(pages)
+		result = self.get_infos(pages,response)
+		
+a = Lagouspider("北京", "nlp")
+
+a.main()
+
+# pages = a.get_pages()
+
+# a.get_infos(pages)
