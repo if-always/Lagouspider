@@ -71,7 +71,6 @@ def Delete_sql(dbname, tbname, user, passwd):
 	db_con.close()
 
 
-sql = """SELECT DISTINCT `positionID` FROM `datajobs`"""
+sql = """SELECT * FROM `Videos` WHERE `dates` LIKE '%2019-10-20%'"""
 
-res = Select_sql("Lagou",sql)
-print(len(res))
+print(Select_sql("Bilibili",sql))
